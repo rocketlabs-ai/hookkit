@@ -1,0 +1,91 @@
+{
+  "_comment": "HookKit settings.json snippet — copy the hooks array into your .claude/settings.json",
+  "_note": "Replace /path/to/hookkit with your actual hookkit installation path",
+  "_docs": "https://github.com/your-org/hookkit",
+
+  "hooks": {
+    "PostToolUse": [
+      {
+        "_comment": "Cost tracking — runs after every tool call",
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python /path/to/hookkit/hooks/cost-tracker.py",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "_comment": "Loop detection — runs after every tool call (agent sessions only)",
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python /path/to/hookkit/hooks/loop-detector.py",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "_comment": "Context window monitor — runs after every tool call",
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python /path/to/hookkit/hooks/context-monitor.py",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "_comment": "GlassWorm scanner — only activates on npm/pip install commands",
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python /path/to/hookkit/hooks/glassworm-scanner.py",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "_comment": "Outbound gate — blocks dangerous operations before they execute",
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python /path/to/hookkit/hooks/outbound-gate.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "_comment": "Session snapshot — captures state when session ends",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python /path/to/hookkit/hooks/session-snapshot.py",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
+
+  "_env_vars": {
+    "_comment": "Optional environment variables to customize hook behavior",
+    "COST_TRACKER_LOG":        "~/.claude/cost-tracker.jsonl",
+    "COST_TRACKER_WARN":       "2.00",
+    "COST_TRACKER_STOP":       "5.00",
+    "CONTEXT_WINDOW_SIZE":     "200000",
+    "LOOP_DETECTOR_ENABLED":   "1",
+    "LOOP_DETECTOR_WARN_THRESHOLD": "3",
+    "LOOP_DETECTOR_STOP_THRESHOLD": "5",
+    "SNAPSHOT_DIR":            "~/.claude/snapshots"
+  }
+}

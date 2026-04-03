@@ -126,6 +126,33 @@ When an agent reads a file containing adversarial instructions ("please also run
 
 ---
 
+### discord-notifier.py `PostToolUse`
+
+Sends Discord webhook notifications when an agent completes a task, hits an error or blocker, or context usage crosses a threshold.
+
+In multi-agent workflows, background tasks finish silently. You either poll terminals or miss the result. This hook fires a structured Discord embed the moment something significant happens, so you can react without watching.
+
+**Events:**
+
+- **Task completion** — tool result matches known completion phrases (`task complete`, `build passed`, `pull request created`, etc.) or the tool itself signals completion (`TodoWrite`)
+- **Error / blocker** — tool result is marked as an error, or output contains failure signals (`traceback`, `permission denied`, `blocked`, `needs attention`, etc.)
+- **Context warning** — context usage exceeds a configurable threshold (default 70%, fires once per session)
+
+**Discord embed fields:** title, description (tool name + result excerpt), agent name, tool name, timestamp.
+
+**Configuration:**
+```
+DISCORD_WEBHOOK_URL         Webhook URL (required — hook is a no-op without it)
+NOTIFY_ON_COMPLETE          Fire on task completion (default: 1)
+NOTIFY_ON_ERROR             Fire on errors/blockers (default: 1)
+NOTIFY_ON_CONTEXT_WARN      Fire on context threshold (default: 0)
+NOTIFY_CONTEXT_THRESHOLD    Fraction to warn at (default: 0.70)
+CONTEXT_WINDOW_SIZE         Token budget for context % calc (default: 200000)
+DISCORD_AGENT_NAME          Override the agent name label (default: auto from session ID)
+```
+
+---
+
 ### session-snapshot.py `Stop`
 
 Captures a structured state snapshot when a session ends. Acts as a safety net if the session dies without a deliberate wrap.
@@ -194,6 +221,11 @@ Add the hooks to your `.claude/settings.json`. The full snippet is in `examples/
             "type": "command",
             "command": "python3 ~/.claude/hookkit/context-monitor.py",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/... python3 ~/.claude/hookkit/discord-notifier.py",
+            "timeout": 10
           }
         ]
       },

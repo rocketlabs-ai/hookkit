@@ -1,7 +1,7 @@
 {
   "_comment": "HookKit settings.json snippet — copy the hooks array into your .claude/settings.json",
   "_note": "Replace /path/to/hookkit with your actual hookkit installation path",
-  "_docs": "https://github.com/your-org/hookkit",
+  "_docs": "https://github.com/rocketlabs-ai/hookkit",
 
   "hooks": {
     "PostToolUse": [

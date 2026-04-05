@@ -179,7 +179,7 @@ SNAPSHOT_DIR   Output directory (default: ~/.claude/snapshots)
 ### Quick install
 
 ```bash
-git clone https://github.com/your-org/hookkit
+git clone https://github.com/rocketlabs-ai/hookkit
 cd hookkit
 bash install.sh
 ```
